@@ -9,6 +9,7 @@ import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class ValidationPipe implements PipeTransform<any> {
+  constructor (){}
   async transform(value: any, { metatype }: ArgumentMetadata) {
     if (!metatype || !this.toValidate(metatype)) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return

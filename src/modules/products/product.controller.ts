@@ -3,7 +3,7 @@ import {
   Delete,
   Get,
   Post,
-  Put,
+  Patch,
   Param,
   Body,
   ParseIntPipe,
@@ -71,7 +71,7 @@ export class ProductsController {
       );
     }
   }
-  @Put('/:id')
+  @Patch('/:id')
   updateProduct(
     @Body() productDto: ProductDto,
     @Param('id') id: number,

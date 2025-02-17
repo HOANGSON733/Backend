@@ -9,5 +9,6 @@ export class Product {
     if (categoryId !== null) this.categoryId = categoryId;
     if (productName !== null) this.productName = productName;
     if (price !== null) this.price = price;
+    return this
   }
 }

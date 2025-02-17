@@ -20,6 +20,8 @@ export class ProductService {
       ...productDto,
     };
     this.products.push(product);
+    console.log("product",product);
+    
     return product;
   }
 
