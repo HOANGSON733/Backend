@@ -1,91 +1,109 @@
-import { Controller, Delete, Get, Post, Put } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Put,
+  Param,
+  Body,
+  ParseIntPipe,
+  ValidationPipe,
+} from '@nestjs/common';
 import { ProductService } from './product.service';
 import { ResponseData } from 'src/global/globalClass';
 import { HttpMessager, HttpStatus } from 'src/global/globalEnum';
+import { Product } from 'src/models/product.models';
+import { ProductDto } from 'src/dto/product.dto';
 
-@Controller('produscts')
+@Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductService) {}
   @Get()
-  getProducts(): ResponseData<string> {
+  getProducts(): ResponseData<Product[]> {
     try {
-      return new ResponseData<string>(
+      return new ResponseData<Product[]>(
         this.productsService.getProducts(),
         HttpStatus.SUCCESS,
         HttpMessager.SUCCESS,
       );
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error: any) {
-      return new ResponseData<string>(
-        ' null | string[]',
+      return new ResponseData<Product[]>(
+        [],
         HttpStatus.ERROR,
         HttpMessager.ERROR,
       );
     }
   }
   @Post()
-  createProducts(): ResponseData<string> {
+  createProducts(
+    @Body(new ValidationPipe()) productDto: ProductDto,
+  ): ResponseData<Product> {
     try {
-      return new ResponseData<string>(
-        this.productsService.createProducts(),
+      return new ResponseData<Product>(
+        this.productsService.createProducts(productDto),
         HttpStatus.SUCCESS,
         HttpMessager.SUCCESS,
       );
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error: any) {
-      return new ResponseData<string>(
-        ' null | string[]',
+    } catch (error) {
+      return new ResponseData<Product>(
+        null,
         HttpStatus.ERROR,
         HttpMessager.ERROR,
       );
     }
   }
   @Get('/:id')
-  detaiProduct(): ResponseData<string> {
+  detaiProduct(@Param('id', ParseIntPipe) id: number): ResponseData<Product> {
     try {
-      return new ResponseData<string>(
-        this.productsService.deleteProduct(),
+      return new ResponseData<Product>(
+        this.productsService.detaiProduct(id),
         HttpStatus.SUCCESS,
         HttpMessager.SUCCESS,
       );
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error: any) {
-      return new ResponseData<string>(
-        ' null | string[]',
+      return new ResponseData<Product>(
+        [],
         HttpStatus.ERROR,
         HttpMessager.ERROR,
       );
     }
   }
   @Put('/:id')
-  updateProduct(): ResponseData<string> {
+  updateProduct(
+    @Body() productDto: ProductDto,
+    @Param('id') id: number,
+  ): ResponseData<Product> {
     try {
-      return new ResponseData<string>(
-        this.productsService.updateProduct(),
+      return new ResponseData<Product>(
+        this.productsService.updateProduct(productDto, id),
         HttpStatus.SUCCESS,
         HttpMessager.SUCCESS,
       );
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error: any) {
-      return new ResponseData<string>(
-        ' null | string[]',
+      console.error('Update Product Error:', error); // Log lỗi để kiểm tra
+      return new ResponseData<Product>(
+        null,
         HttpStatus.ERROR,
         HttpMessager.ERROR,
       );
     }
   }
+
   @Delete('/:id')
-  deleteProduct(): ResponseData<string> {
+  deleteProduct(@Param('id') id: number): ResponseData<boolean> {
     try {
-      return new ResponseData<string>(
-        this.productsService.deleteProduct(),
+      return new ResponseData<boolean>(
+        this.productsService.deleteProduct(id),
         HttpStatus.SUCCESS,
         HttpMessager.SUCCESS,
       );
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error: any) {
-      return new ResponseData<string>(
-        ' null | string[]',
+      return new ResponseData<boolean>(
+        null,
         HttpStatus.ERROR,
         HttpMessager.ERROR,
       );
