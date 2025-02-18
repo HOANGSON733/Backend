@@ -31,7 +31,7 @@ export class ServiceController {
 
     @Patch("/:id")
     async updateService(
-        @Param('id') id: number,
+        @Param('id') id: string,
         @Body() updateData: Partial<CreateServiceDto>
     ): Promise<ResponseData<ServiceEntity>> {
         try {
@@ -45,7 +45,7 @@ export class ServiceController {
     @Get("/:id")
     async getServiceDetail(@Param('id') id: string): Promise<ResponseData<ServiceEntity>> {
         try {
-            const item = await this.serviceService.getDetail(Number(id));
+            const item = await this.serviceService.getDetail((id));
             return new ResponseData<ServiceEntity>(item, HttpStatus.SUCCESS, HttpMessager.SUCCESS);
         } catch (error) {
             return new ResponseData<ServiceEntity>(null, HttpStatus.ERROR, error.message || HttpMessager.ERROR);
@@ -58,7 +58,7 @@ export class ServiceController {
     @Delete("/:id")
     async deleteService(@Param('id') id: string): Promise<ResponseData<null>> {
         try {
-            const result = await this.serviceService.deleteService(Number(id));
+            const result = await this.serviceService.deleteService(String(id));
             return new ResponseData<null>(null, HttpStatus.SUCCESS, result.message);
         } catch (error) {
             return new ResponseData<null>(null, HttpStatus.ERROR, error.message || HttpMessager.ERROR);

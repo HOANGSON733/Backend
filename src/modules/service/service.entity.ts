@@ -1,10 +1,10 @@
 import { BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity({ name: "Service" })
+@Entity({ name: "service" })
 
 export class ServiceEntity {
-    @PrimaryGeneratedColumn({ name: "id" })
-    id: number
+    @PrimaryGeneratedColumn( "uuid" )
+    id: string
 
     @Column({ type: "varchar", name: "title", nullable: true })
     title: string

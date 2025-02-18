@@ -16,7 +16,6 @@ export class ProductService {
 
   createProducts(productDto: ProductDto): Product {
     const product: Product = {
-      id: Math.random(),
       ...productDto,
     };
     this.products.push(product);

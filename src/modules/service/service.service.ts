@@ -8,29 +8,36 @@ import { UpdateServiceDto } from "src/dto/service.dto"; // Đổi DTO đúng
 @Injectable()
 export class ServiceService {
     constructor(@InjectRepository(ServiceEntity) private serviceRepository: Repository<ServiceEntity>) { }
-
     async createService(serviceDto: CreateServiceDto) {
+        console.log("Received DTO:", serviceDto); // Log dữ liệu đầu vào
         const newItem = this.serviceRepository.create(serviceDto);
-        return this.serviceRepository.save(newItem);
+        console.log("Created entity:", newItem); // Log dữ liệu entity được tạo
+    
+        const savedItem = await this.serviceRepository.save(newItem);
+        console.log("Saved entity:", savedItem); // Log dữ liệu sau khi lưu
+    
+        return savedItem;
     }
+    
 
     async getServices() {
         return this.serviceRepository.find();
     }
 
-    async updateService(id: number, serviceDto: UpdateServiceDto) {
-        const item = await this.serviceRepository.findOne({ where: { id: Number(id) } });
+    async updateService(id: string, serviceDto: UpdateServiceDto) {  // 🛠 Sửa thành string
+    const item = await this.serviceRepository.findOne({ where: { id } });
 
-        if (!item) {
-            throw new NotFoundException(`Service with ID ${id} not found`);
-        }
-
-        Object.assign(item, serviceDto);
-        return this.serviceRepository.save(item, { reload: true });
+    if (!item) {
+        throw new NotFoundException(`Service with ID ${id} not found`);
     }
 
-    async getDetail(id: number): Promise<ServiceEntity> {
-        const item = await this.serviceRepository.findOne({ where: { id: Number(id) } });
+    Object.assign(item, serviceDto);
+    return this.serviceRepository.save(item);
+}
+
+
+    async getDetail(id: string): Promise<ServiceEntity> {
+        const item = await this.serviceRepository.findOne({ where: {id} });
     
         if (!item) {
             throw new NotFoundException(`Service with ID ${id} not found`);
@@ -39,8 +46,8 @@ export class ServiceService {
         return item;
     }
     
-    async deleteService(id: number): Promise<{ message: string }> {
-        const item = await this.serviceRepository.findOne({ where: { id: Number(id) } });
+    async deleteService(id: string): Promise<{ message: string }> {
+        const item = await this.serviceRepository.findOne({ where: { id } });
     
         if (!item) {
             throw new NotFoundException(`Service with ID ${id} not found`);

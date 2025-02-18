@@ -1,4 +1,3 @@
-
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { BlogEntity } from './blog.entity';
@@ -43,8 +42,8 @@ export class BlogService {
     if (!item) {
       throw new Error("Blog not found");
     }
-    await this.blogRepository.delete(id); // Delete the blog by id
-    return { message: 'Blog deleted successfully' }; // Return a success message
+    await this.blogRepository.delete(id); 
+    return { message: 'Blog deleted successfully' }; 
   }
 
 
