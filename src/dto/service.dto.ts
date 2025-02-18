@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class CreateBlogDto {
+export class CreateServiceDto {
     @IsNotEmpty()
     @IsString()
     content: string
@@ -16,7 +16,7 @@ export class CreateBlogDto {
     description: string
 
 }
-export class UpdateBlogDto {
+export class UpdateServiceDto {
     content?: string
     image?: string
     title?: string

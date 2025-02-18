@@ -49,4 +49,26 @@ export class BlogController {
       return new ResponseData<BlogEntity>(null, HttpStatus.ERROR, HttpMessager.ERROR)
     }
   }
+
+  @Get("/:id")
+  async detailBlog(@Param("id", ParseIntPipe) id: number): Promise<ResponseData<BlogEntity>> {
+    try {
+      const item = await this.blogservice.detailBlog(id);
+      return new ResponseData<BlogEntity>(item, HttpStatus.SUCCESS, HttpMessager.SUCCESS);
+    } catch (error) {
+      return new ResponseData<BlogEntity>(null, HttpStatus.ERROR, HttpMessager.ERROR);
+    }
+  }
+
+  @Delete("/:id")
+  async deleteBlog(@Param("id", ParseIntPipe) id: number): Promise<ResponseData<null>> {
+    try {
+      await this.blogservice.deleteBlog(id);
+      return new ResponseData<null>(null, HttpStatus.SUCCESS, HttpMessager.SUCCESS);
+    } catch (error) {
+      return new ResponseData<null>(null, HttpStatus.ERROR, HttpMessager.ERROR);
+    }
+  }
+
+  
 }

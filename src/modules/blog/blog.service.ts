@@ -10,7 +10,7 @@ import { CreateBlogDto, UpdateBlogDto } from 'src/dto/blog.dto';
 export class BlogService {
   constructor(@InjectRepository(BlogEntity) private blogRepository: Repository<BlogEntity>) { }
   async createBlog(blogDto: CreateBlogDto) {
-    const newItem = await this.blogRepository.create(blogDto);
+    const newItem = this.blogRepository.create(blogDto);
     console.log("blog", newItem);
 
     return this.blogRepository.save(newItem)
@@ -29,4 +29,23 @@ export class BlogService {
     }
     return this.blogRepository.save(itemUpdate, { reload: true });
   }
+
+  async detailBlog(id: number) {
+    const item = await this.blogRepository.findOne({ where: { id } });
+    if (!item) {
+      throw new Error("Blog not found");
+    }
+    return item;
+  }
+
+  async deleteBlog(id: number) {
+    const item = await this.blogRepository.findOne({ where: { id } });
+    if (!item) {
+      throw new Error("Blog not found");
+    }
+    await this.blogRepository.delete(id); // Delete the blog by id
+    return { message: 'Blog deleted successfully' }; // Return a success message
+  }
+
+
 }
