@@ -10,14 +10,16 @@ export class ServiceController {
     constructor(private readonly serviceService: ServiceService) { }
 
     @Post()
-    async createBlog(@Body() serviceDto: CreateServiceDto): Promise<ResponseData<ServiceEntity>> {
+    async createService(@Body() serviceDto: CreateServiceDto): Promise<ResponseData<ServiceEntity>> {
+        console.log("Received body:", serviceDto); // In ra body nhận được
         try {
             const newItem = await this.serviceService.createService(serviceDto);
             return new ResponseData<ServiceEntity>(newItem, HttpStatus.SUCCESS, HttpMessager.SUCCESS);
         } catch (error) {
-            return new ResponseData<ServiceEntity>(null, HttpStatus.ERROR, HttpMessager.ERROR);
+            return new ResponseData<ServiceEntity>(null, HttpStatus.ERROR, error.message || HttpMessager.ERROR);
         }
     }
+
 
     @Get()
     async getServices(): Promise<ResponseData<ServiceEntity[]>> { // Sửa thành mảng vì Get trả về nhiều dữ liệu
@@ -31,7 +33,7 @@ export class ServiceController {
 
     @Patch("/:id")
     async updateService(
-        @Param('id') id: string,
+        @Param('id') id: number,
         @Body() updateData: Partial<CreateServiceDto>
     ): Promise<ResponseData<ServiceEntity>> {
         try {
@@ -43,7 +45,7 @@ export class ServiceController {
     }
 
     @Get("/:id")
-    async getServiceDetail(@Param('id') id: string): Promise<ResponseData<ServiceEntity>> {
+    async getServiceDetail(@Param('id') id: number): Promise<ResponseData<ServiceEntity>> {
         try {
             const item = await this.serviceService.getDetail((id));
             return new ResponseData<ServiceEntity>(item, HttpStatus.SUCCESS, HttpMessager.SUCCESS);
@@ -56,9 +58,9 @@ export class ServiceController {
 
 
     @Delete("/:id")
-    async deleteService(@Param('id') id: string): Promise<ResponseData<null>> {
+    async deleteService(@Param('id') id: number): Promise<ResponseData<null>> {
         try {
-            const result = await this.serviceService.deleteService(String(id));
+            const result = await this.serviceService.deleteService(Number(id));
             return new ResponseData<null>(null, HttpStatus.SUCCESS, result.message);
         } catch (error) {
             return new ResponseData<null>(null, HttpStatus.ERROR, error.message || HttpMessager.ERROR);

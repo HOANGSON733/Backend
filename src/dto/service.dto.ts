@@ -1,29 +1,37 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, IsOptional, IsUrl } from 'class-validator';
 
 export class CreateServiceDto {
     @IsNotEmpty()
     @IsString()
-    content: string
+    content: string;
 
     @IsNotEmpty()
-    image: string
+    @IsUrl()
+    image: string;
 
     @IsString()
     @IsNotEmpty()
-    title: string
+    title: string;
 
     @IsString()
-    description: string
-
+    @IsOptional()
+    description?: string;
 }
+
 export class UpdateServiceDto {
-    content?: string
-    image?: string
-    title?: string
-    description?: string
+    @IsOptional()
+    @IsString()
+    content?: string;
 
+    @IsOptional()
+    @IsUrl()
+    image?: string;
+
+    @IsOptional()
+    @IsString()
+    title?: string;
+
+    @IsOptional()
+    @IsString()
+    description?: string;
 }
-
-
-
-

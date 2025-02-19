@@ -1,30 +1,30 @@
 import { BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: "service" })
-
 export class ServiceEntity {
-    @PrimaryGeneratedColumn( "uuid" )
-    id: string
+    @PrimaryGeneratedColumn()
+    id: number;
 
     @Column({ type: "varchar", name: "title", nullable: true })
-    title: string
+    title: string;
 
     @Column({ type: "varchar", name: "image", nullable: true })
-    image: string
+    image: string;
 
     @Column({ type: "varchar", name: "content", nullable: true })
-    content: string
+    content: string;
 
     @Column({ type: "varchar", name: "description", nullable: true })
-    description: string
+    description: string;
 
     @Column({ type: "varchar", name: "slug", nullable: true })
-    slug: string
+    slug: string;
 
     @BeforeInsert()
     @BeforeUpdate()
     async createSlug() {
-        const slug = (await import("slug")).default;
-        this.slug = slug(this.title);
+        const slugModule = await import("slug");
+        const slug = slugModule.default;
+        this.slug = slug(this.title || "", { lower: true });
     }
 }

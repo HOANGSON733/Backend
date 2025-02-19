@@ -1,12 +1,46 @@
-import { IsNotEmpty, IsNumber, MinLength } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, IsArray, IsOptional } from 'class-validator';
+import { Type } from 'class-transformer';
 
-export class ProductDto {
+export class CreateProductDto {
   @IsNotEmpty()
-  categoryId?: number;
+  @IsString()
+  name: string;
 
-  @MinLength(5, { message: 'Bạn phải chuyền trên 5 ký tự vào nè!!!' })
-  productName?: string;
-
+  @IsNotEmpty()
   @IsNumber()
-  price?: number;
+  @Type(() => Number)
+  price: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  originalPrice?: number;
+
+  @IsNotEmpty()
+  @IsString()
+  image: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  gallery?: string[];
+
+  @IsNotEmpty()
+  @IsString()
+  category: string;
+
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  features?: string[];
+  weight: string;
+  origin: string;
+  holdLevel: string;
+  shineLevel: string;
+  ingredients: string;
+  expiry: string;
 }
