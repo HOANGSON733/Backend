@@ -22,7 +22,7 @@ export class ServiceController {
 
 
     @Get()
-    async getServices(): Promise<ResponseData<ServiceEntity[]>> { // Sửa thành mảng vì Get trả về nhiều dữ liệu
+    async getServices(): Promise<ResponseData<ServiceEntity[]>> {   
         try {
             const items = await this.serviceService.getServices();
             return new ResponseData<ServiceEntity[]>(items, HttpStatus.SUCCESS, HttpMessager.SUCCESS);
@@ -53,8 +53,6 @@ export class ServiceController {
             return new ResponseData<ServiceEntity>(null, HttpStatus.ERROR, error.message || HttpMessager.ERROR);
         }
     }
-
-
 
 
     @Delete("/:id")

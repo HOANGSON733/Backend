@@ -13,7 +13,7 @@ import { serviceModule } from './modules/service/service.module';
     port: 3306,
     username: 'root',
     password: 'root',
-    database: 'tesst',
+    database: 'test',
     entities: [
         __dirname + '/**/*.entity{.ts,.js}',
     ],

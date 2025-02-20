@@ -23,7 +23,7 @@ export class CreateProductDto {
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
-  gallery?: string[];
+  gallery?: string;
 
   @IsNotEmpty()
   @IsString()
@@ -36,11 +36,30 @@ export class CreateProductDto {
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
-  features?: string[];
+  features?: string;
+
+  // 🛠️ Thêm validation cho các thuộc tính specifications
+  @IsNotEmpty()
+  @IsString()
   weight: string;
+
+  @IsNotEmpty()
+  @IsString()
   origin: string;
+
+  @IsNotEmpty()
+  @IsString()
   holdLevel: string;
+
+  @IsNotEmpty()
+  @IsString()
   shineLevel: string;
+
+  @IsNotEmpty()
+  @IsString()
   ingredients: string;
+
+  @IsNotEmpty()
+  @IsString()
   expiry: string;
 }
