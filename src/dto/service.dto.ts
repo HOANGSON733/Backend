@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsOptional, IsUrl } from 'class-validator';
+import { IsNotEmpty, IsString, IsOptional, IsArray, IsUrl } from 'class-validator';
 
 export class CreateServiceDto {
     @IsNotEmpty()
@@ -6,8 +6,9 @@ export class CreateServiceDto {
     content: string;
 
     @IsNotEmpty()
-    @IsUrl()
-    image: string;
+    @IsArray()
+    @IsUrl({}, { each: true }) // Đảm bảo mỗi phần tử trong mảng là URL hợp lệ
+    image: string[];
 
     @IsString()
     @IsNotEmpty()
@@ -24,8 +25,9 @@ export class UpdateServiceDto {
     content?: string;
 
     @IsOptional()
-    @IsUrl()
-    image?: string;
+    @IsArray()
+    @IsUrl({}, { each: true }) // Đảm bảo mỗi phần tử trong mảng là URL hợp lệ
+    image?: string[];
 
     @IsOptional()
     @IsString()

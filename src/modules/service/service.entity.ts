@@ -8,13 +8,13 @@ export class ServiceEntity {
     @Column({ type: "varchar", name: "title", nullable: true })
     title: string;
 
-    @Column({ type: "varchar", name: "image", nullable: true })
-    image: string;
+    @Column({ type: "simple-json", name: "image", nullable: true })
+    image: string[]; // ✅ Lưu `image` dưới dạng JSON thay vì chuỗi
 
     @Column({ type: "varchar", name: "content", nullable: true })
     content: string;
 
-    @Column({ type: "varchar", name: "description", nullable: true })
+    @Column({ type: "varchar", length: 1000, name: "description", nullable: true })
     description: string;
 
     @Column({ type: "varchar", name: "slug", nullable: true })

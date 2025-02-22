@@ -17,8 +17,8 @@ import { serviceModule } from './modules/service/service.module';
     entities: [
         __dirname + '/**/*.entity{.ts,.js}',
     ],
-    synchronize: false,
-    // dropSchema: true,
+    synchronize: true,
+    dropSchema: true,
   })],
   controllers: [AppController],
   providers: [AppService],
