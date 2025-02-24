@@ -5,9 +5,10 @@ import { ProductModule } from './modules/products/product.module';
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { blogModule } from './modules/blog/blog.module';
 import { serviceModule } from './modules/service/service.module';
+import { GalleryModule } from './modules/gallery/gallery.module';
 
 @Module({
-  imports: [serviceModule, ProductModule, blogModule, TypeOrmModule.forRoot({
+  imports: [GalleryModule,serviceModule, ProductModule, blogModule, TypeOrmModule.forRoot({
     type: 'mysql',
     host: 'localhost',
     port: 3306,
