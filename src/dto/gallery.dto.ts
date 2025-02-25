@@ -8,7 +8,7 @@ export class CreateGalleryDto {
     @IsNotEmpty()
     @IsArray()
     @IsUrl({}, { each: true }) // Đảm bảo mỗi phần tử trong mảng là URL hợp lệ
-    image: string[];
+    image: string;
 
     @IsString()
     @IsNotEmpty()
@@ -31,7 +31,7 @@ export class UpdateGalleryDto {
     @IsOptional()
     @IsArray()
     @IsUrl({}, { each: true }) // Đảm bảo mỗi phần tử trong mảng là URL hợp lệ
-    image?: string[];
+    image?: string;
 
     @IsOptional()
     @IsString()

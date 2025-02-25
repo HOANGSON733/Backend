@@ -10,7 +10,6 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { BlogService } from './blog.service';
-
 import { BlogEntity } from './blog.entity';
 import { CreateBlogDto, UpdateBlogDto } from 'src/dto/blog.dto';
 import { ResponseData } from 'src/global/globalClass';

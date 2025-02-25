@@ -12,7 +12,7 @@ export class GalleryEntity {
     title: string;
 
     @Column({ type: "text", name: "image", nullable: true })
-    image: string; // Sẽ lưu array dưới dạng chuỗi phân cách bằng dấu phẩy
+    image: string;
 
     @Column({ type: "text", name: "content", nullable: true })
     content: string;

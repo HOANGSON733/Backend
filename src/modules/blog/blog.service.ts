@@ -8,6 +8,7 @@ import { CreateBlogDto, UpdateBlogDto } from 'src/dto/blog.dto';
 @Injectable()
 export class BlogService {
   constructor(@InjectRepository(BlogEntity) private blogRepository: Repository<BlogEntity>) { }
+
   async createBlog(blogDto: CreateBlogDto) {
     const newItem = this.blogRepository.create(blogDto);
     console.log("blog", newItem);
@@ -32,7 +33,7 @@ export class BlogService {
   async detailBlog(id: number) {
     const item = await this.blogRepository.findOne({ where: { id } });
     if (!item) {
-      throw new Error("Blog not found");
+      throw new Error("Blog lỗi detail");
     }
     return item;
   }
