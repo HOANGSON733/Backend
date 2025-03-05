@@ -12,7 +12,7 @@ export class GalleryEntity {
     title: string;
 
     @Column({ type: "text", name: "image", nullable: true })
-    image: string;
+    image: string[];
 
     @Column({ type: "text", name: "content", nullable: true })
     content: string;
