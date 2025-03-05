@@ -3,20 +3,21 @@ import { IsNotEmpty, IsString, IsOptional, IsArray, IsUrl } from 'class-validato
 export class CreateGalleryDto {
     @IsNotEmpty()
     @IsString()
-    content: string;
-
-    @IsNotEmpty()
-    @IsArray()
-    @IsUrl({}, { each: true }) // Đảm bảo mỗi phần tử trong mảng là URL hợp lệ
-    image: string[];
+    name: string;
 
     @IsString()
     @IsNotEmpty()
     title: string;
 
+
+    @IsNotEmpty()
+    @IsArray()
+
+    image?: string[];
+
     @IsString()
     @IsOptional()
-    description?: string;
+    content: string;
 
     @IsString()
     @IsNotEmpty()

@@ -15,6 +15,7 @@ export class CreateBlogDto {
     @IsString()
     description: string
 
+
 }
 export class UpdateBlogDto {
     content?: string

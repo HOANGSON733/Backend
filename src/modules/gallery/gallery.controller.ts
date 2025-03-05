@@ -8,19 +8,36 @@ import {
     Body,
     ParseIntPipe,
     ValidationPipe,
+    Req,
+    UseInterceptors
 } from '@nestjs/common';
 import { ResponseData } from 'src/global/globalClass';
 import { HttpMessager, HttpStatus } from 'src/global/globalEnum';
 import { GalleryService } from './gallery.service';
 import { CreateGalleryDto, UpdateGalleryDto } from 'src/dto/gallery.dto';
 import { GalleryEntity } from './gallery.entity';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
 
 @Controller('gallery')
 export class GalleryController {
     constructor(private readonly galleryService: GalleryService) { }
 
     @Post()
+    @UseInterceptors(FileInterceptor('image',
+        {
+            storage: diskStorage({
+                destination: "./uploads",
+                filename: (req, file, cb) => {
+                    const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('')
+                    return cb(null, `${randomName}${extname(file.originalname)}`)
+                }
+            })
+        }))
     async createGallary(@Body() gallaryDto: CreateGalleryDto): Promise<ResponseData<GalleryEntity>> {
+        console.log("gallaryDto", gallaryDto);
+
         try {
             const newItem = await this.galleryService.createGallery(gallaryDto)
             return new ResponseData<GalleryEntity>(newItem, HttpStatus.SUCCESS, HttpMessager.SUCCESS)
@@ -62,7 +79,7 @@ export class GalleryController {
         }
     }
 
-    
+
     @Patch("/:id")
     async UpdateGallery(@Body() galleryDto: UpdateGalleryDto, @Param("id") id: number): Promise<ResponseData<GalleryEntity>> {
         try {

@@ -9,6 +9,8 @@ export class GalleryService {
     constructor(@InjectRepository(GalleryEntity) private galleryRepository: Repository<GalleryEntity>) { }
 
     async createGallery(gallaryDto: CreateGalleryDto) {
+        console.log("gallaryDto", gallaryDto);
+        
         const newItem = this.galleryRepository.create(gallaryDto);
         console.log("blog", newItem);
         return this.galleryRepository.save(newItem)
