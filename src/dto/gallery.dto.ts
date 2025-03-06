@@ -13,7 +13,7 @@ export class CreateGalleryDto {
     @IsNotEmpty()
     @IsArray()
 
-    image?: string[];
+    image?: string;
 
     @IsString()
     @IsOptional()
