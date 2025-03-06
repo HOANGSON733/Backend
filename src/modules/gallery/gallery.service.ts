@@ -7,14 +7,15 @@ import { CreateGalleryDto, UpdateGalleryDto } from 'src/dto/gallery.dto';
 @Injectable()
 export class GalleryService {
     constructor(@InjectRepository(GalleryEntity) private galleryRepository: Repository<GalleryEntity>) { }
-
-    async createGallery(gallaryDto: CreateGalleryDto) {
-        console.log("gallaryDto", gallaryDto);
-        
-        const newItem = this.galleryRepository.create(gallaryDto);
-        console.log("blog", newItem);
-        return this.galleryRepository.save(newItem)
+    async createGallery(data, file: Express.Multer.File) {
+        const BASE_URL = "http://localhost:5000/uploads/";
+        const newGallery = this.galleryRepository.create({
+            ...data,
+            image: file ? BASE_URL + file.filename : null, 
+        });
+        return await this.galleryRepository.save(newGallery);
     }
+    
 
 
     async GetGallery() {
@@ -39,12 +40,13 @@ export class GalleryService {
         return { message: "Đã Xóa !!!!" }
     }
 
-    async UpdateGallery(id: number,gallaryDto:UpdateGalleryDto){
+    async UpdateGallery(id: number, galleryDto: UpdateGalleryDto): Promise<GalleryEntity> {
         const item = await this.galleryRepository.findOne({where:{id}});
         const itemUpdate = {
             ...item,
-            ...gallaryDto
+            ...galleryDto
         }
-        return this.galleryRepository.save(itemUpdate, {reload:true})
+        return this.galleryRepository.save(itemUpdate[0], { reload: true });
+
     }
 }
