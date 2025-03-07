@@ -40,13 +40,21 @@ export class GalleryService {
         return { message: "Đã Xóa !!!!" }
     }
 
-    async UpdateGallery(id: number, galleryDto: UpdateGalleryDto): Promise<GalleryEntity> {
-        const item = await this.galleryRepository.findOne({where:{id}});
-        const itemUpdate = {
-            ...item,
-            ...galleryDto
+    async UpdateGallery(id: number, galleryDto: UpdateGalleryDto) {
+        const item = await this.galleryRepository.findOne({ where: { id } });
+    
+        if (!item) {
+            throw new Error(`Gallery với ID ${id} không tồn tại!`); // 🚨 Thông báo lỗi nếu không tìm thấy entity
         }
-        return this.galleryRepository.save(itemUpdate[0], { reload: true });
-
+    
+        const itemUpdate = this.galleryRepository.create({
+            ...item,
+            ...galleryDto,
+            image: Array.isArray(galleryDto.image) ? galleryDto.image.join(",") : galleryDto.image, // ✅ Chuyển về string nếu là mảng
+        });
+        
+    
+        return this.galleryRepository.save(itemUpdate); // ✅ Đảm bảo lưu đúng entity
     }
+    
 }
