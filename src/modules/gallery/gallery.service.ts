@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GalleryEntity } from './gallery.entity';
 import { CreateGalleryDto, UpdateGalleryDto } from 'src/dto/gallery.dto';
+import path from 'path';
+import * as fs from 'fs';
 
 @Injectable()
 export class GalleryService {
@@ -31,14 +33,6 @@ export class GalleryService {
         return item;
     }
 
-    async DeleteGallery(id: number) {
-        const item = await this.galleryRepository.findOne({ where: { id } });
-        if (!item) {
-            throw new Error("Blog Not Bad")
-        }
-        await this.galleryRepository.delete(id);
-        return { message: "Đã Xóa !!!!" }
-    }
 
     async UpdateGallery(id: number, galleryDto: UpdateGalleryDto) {
         const item = await this.galleryRepository.findOne({ where: { id } });
@@ -56,5 +50,26 @@ export class GalleryService {
     
         return this.galleryRepository.save(itemUpdate); // ✅ Đảm bảo lưu đúng entity
     }
-    
+
+
+    async DeleteGallery(id: number): Promise<void> {
+    const gallery = await this.galleryRepository.findOne({ where: { id } });
+
+    if (!gallery) {
+      throw new NotFoundException(`Gallery với ID ${id} không tồn tại`);
+    }
+
+    // Xóa file ảnh nếu tồn tại
+    if (gallery.image) {
+      const imagePath = path.join(__dirname, '..', '..', 'uploads', gallery.image);
+      fs.unlink(imagePath, (err) => {
+        if (err) {
+          console.error('Lỗi khi xóa ảnh:', err);
+        }
+      });
+    }
+
+    // Xóa dữ liệu trong database
+    await this.galleryRepository.remove(gallery);
+  }
 }
