@@ -1,11 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GalleryEntity } from './gallery.entity';
 import { CreateGalleryDto, UpdateGalleryDto } from 'src/dto/gallery.dto';
-import path from 'path';
 import * as fs from 'fs';
-
+import * as path from 'path';
 @Injectable()
 export class GalleryService {
     constructor(@InjectRepository(GalleryEntity) private galleryRepository: Repository<GalleryEntity>) { }
@@ -52,24 +51,31 @@ export class GalleryService {
     }
 
 
-    async DeleteGallery(id: number): Promise<void> {
-    const gallery = await this.galleryRepository.findOne({ where: { id } });
-
-    if (!gallery) {
-      throw new NotFoundException(`Gallery với ID ${id} không tồn tại`);
+async DeleteGallery(id: number) {
+    const item = await this.galleryRepository.findOne({ where: { id } });
+    
+    if (!item) {
+        throw new Error("Gallery Not Found");
     }
 
-    // Xóa file ảnh nếu tồn tại
-    if (gallery.image) {
-      const imagePath = path.join(__dirname, '..', '..', 'uploads', gallery.image);
-      fs.unlink(imagePath, (err) => {
-        if (err) {
-          console.error('Lỗi khi xóa ảnh:', err);
+    // Kiểm tra nếu có ảnh thì xóa
+    if (item.image) {
+        // Lấy tên file từ URL (bỏ đi phần "http://localhost:5000/uploads/")
+        const fileName = path.basename(item.image);
+        const filePath = path.join(__dirname, '../../../uploads', fileName);
+
+        console.log(`Đang xóa ảnh: ${filePath}`);
+
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath); // Xóa file ảnh
+            console.log(`Đã xóa ảnh: ${filePath}`);
+        } else {
+            console.log(`Không tìm thấy ảnh: ${filePath}`);
         }
-      });
     }
 
-    // Xóa dữ liệu trong database
-    await this.galleryRepository.remove(gallery);
-  }
+    await this.galleryRepository.delete(id);
+    return { message: "Đã Xóa !!!!" };
+}
+
 }
