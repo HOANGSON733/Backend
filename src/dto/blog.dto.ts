@@ -18,10 +18,19 @@ export class CreateBlogDto {
 
 }
 export class UpdateBlogDto {
-    content?: string
-    image?: string
-    title?: string
-    description?: string
+    @IsNotEmpty()
+    @IsString()
+    content: string
+
+    @IsNotEmpty()
+    image: string
+
+    @IsString()
+    @IsNotEmpty()
+    title: string
+
+    @IsString()
+    description: string
 
 }
 

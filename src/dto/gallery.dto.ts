@@ -12,8 +12,7 @@ export class CreateGalleryDto {
 
     @IsNotEmpty()
     @IsArray()
-
-    image?: string;
+    images?: string;
 
     @IsString()
     @IsOptional()
