@@ -15,7 +15,8 @@ export class ServiceService {
 
     async createService(data: CreateServiceDto) {
         this.logger.debug("Creating new service with data: " + JSON.stringify(data));
-
+        console.log("Dữ liệu dịch vụ1:", data);
+        
         // Đảm bảo chỉ giữ tối đa 2 hình ảnh
         const images = data.image && data.image.length > 0 ? data.image.slice(0, 2) : [];
 
@@ -28,7 +29,9 @@ export class ServiceService {
     }
 
     async getServices() {
-        return this.serviceRepository.find();
+        const services = await this.serviceRepository.find();
+        console.log("Danh sách dịch vụ:", services);
+        return services;
     }
 
     async getDetail(id: number): Promise<ServiceEntity> {
