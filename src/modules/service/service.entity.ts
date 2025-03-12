@@ -11,11 +11,11 @@ export class ServiceEntity {
     @Column({ type: "simple-json", name: "image", nullable: true })
     image: string[]; // ✅ Lưu `image` dưới dạng JSON thay vì chuỗi
 
-    @Column({ type: "varchar", name: "content", nullable: true })
-    content: string;
+    @Column({ type: "longtext", name: "content1", nullable: true })
+    content1: string;
 
-    @Column({ type: "varchar",length: 255, name: "description", nullable: true })
-    description: string;
+    @Column({ type: "longtext", name: "description1", nullable: true })
+    description1: string;
 
     @Column({ type: "varchar", name: "slug", nullable: true })
     slug: string;

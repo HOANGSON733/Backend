@@ -2,8 +2,7 @@ import { IsNotEmpty, IsString, IsOptional, IsArray, IsUrl } from 'class-validato
 
 export class CreateServiceDto {
     @IsNotEmpty()
-    @IsString()
-    content: string;
+    content1: string;
 
     @IsNotEmpty()
     @IsArray()
@@ -15,8 +14,7 @@ export class CreateServiceDto {
     title: string;
 
     @IsString()
-    @IsOptional()
-    description?: string;
+    description1?: string;
 }
 
 export class UpdateServiceDto {
