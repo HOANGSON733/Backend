@@ -42,9 +42,14 @@ export class ServiceController {
         @Body() serviceDto: CreateServiceDto,
         @UploadedFiles() files: Express.Multer.File[]
     ) {
+        if (!files || files.length === 0) {
+            throw new BadRequestException("Ảnh tải lên không hợp lệ");
+        }
+    
         const imageUrls = files.map(file => `http://localhost:5000/uploads/${file.filename}`);
         return await this.serviceService.createService({ ...serviceDto, image: imageUrls });
     }
+    
 
 
     @Get()
@@ -68,7 +73,7 @@ export class ServiceController {
     }
 
     @Patch("/:id")
-    @UseInterceptors(FileInterceptor("image", {
+    @UseInterceptors(FilesInterceptor("image", 2, {
         storage: diskStorage({
             destination: "./uploads",
             filename: (req, file, callback) => {
@@ -81,12 +86,16 @@ export class ServiceController {
     async updateService(
         @Param("id", ParseIntPipe) id: number,
         @Body() updateData: UpdateServiceDto,
-        @UploadedFile() file?: Express.Multer.File
+        @UploadedFiles() files?: Express.Multer.File[] // Nhận nhiều ảnh
+        
     ): Promise<ResponseData<ServiceEntity>> {
         try {
-            if (file) {
-                updateData.image = [`http://localhost:5000/uploads/${file.filename}`];
-            }
+            // Lấy danh sách ảnh mới
+            const newImages = files?.map(file => `http://localhost:5000/uploads/${file.filename}`) || [];
+            console.log("Files received:1", files);
+            // Kết hợp ảnh cũ và mới
+            updateData.image = [...(updateData.image || []), ...newImages];
+
             const updatedItem = await this.serviceService.updateService(id, updateData);
             return new ResponseData<ServiceEntity>(updatedItem, HttpStatus.SUCCESS, HttpMessager.SUCCESS);
         } catch (error) {

@@ -14,7 +14,7 @@ import { GalleryModule } from './modules/gallery/gallery.module';
     port: 3306,
     username: 'root',
     password: 'root',
-    database: 'test',
+    database: 'nestjs',
     entities: [
         __dirname + '/**/*.entity{.ts,.js}',
     ],

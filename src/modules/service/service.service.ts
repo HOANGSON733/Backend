@@ -16,12 +16,15 @@ export class ServiceService {
     async createService(data: CreateServiceDto) {
         this.logger.debug("Creating new service with data: " + JSON.stringify(data));
         console.log("Dữ liệu dịch vụ1:", data);
-        
+
         // Đảm bảo chỉ giữ tối đa 2 hình ảnh
         const images = data.image && data.image.length > 0 ? data.image.slice(0, 2) : [];
 
+        // const images = Array.isArray(data.image) ? data.image.slice(0, 2) : [];
+
+
         const newItem = this.serviceRepository.create({
-            ...data,
+            ...data, 
             image: images,
         });
 
@@ -35,7 +38,12 @@ export class ServiceService {
     }
 
     async getDetail(id: number): Promise<ServiceEntity> {
-        return this.findServiceOrFail(id);
+        try {
+            return this.findServiceOrFail(id);
+        } catch (error) {
+            this.logger.error(`Error fetching service ID ${id}: ${error.message}`);
+            throw error;
+        }
     }
 
     async updateService(id: number, serviceDto: UpdateServiceDto) {
@@ -53,7 +61,9 @@ export class ServiceService {
 
     async deleteService(id: number): Promise<{ message: string }> {
         const item = await this.findServiceOrFail(id);
-
+        if (Array.isArray(item.image) && item.image.length > 0) {
+            this.deleteImageFiles(item.image);
+        }
         this.deleteImageFiles(item.image); // Xóa tất cả ảnh nếu có
 
         await this.serviceRepository.delete(id);
@@ -68,19 +78,20 @@ export class ServiceService {
         return item;
     }
 
-    private deleteImageFiles(imageUrls?: string[]) {
-        if (!imageUrls || imageUrls.length === 0) return;
+    private async deleteImageFiles(imageUrls?: string[]) {
+        if (!Array.isArray(imageUrls) || imageUrls.length === 0) return;
 
-        imageUrls.forEach((imageUrl) => {
+        for (const imageUrl of imageUrls) {
             const fileName = path.basename(imageUrl);
             const filePath = path.join(__dirname, "../../../uploads", fileName);
 
-            if (fs.existsSync(filePath)) {
-                fs.unlinkSync(filePath);
+            try {
+                await fs.promises.unlink(filePath);
                 this.logger.log(`Deleted image: ${filePath}`);
-            } else {
-                this.logger.warn(`Image not found: ${filePath}`);
+            } catch (error) {
+                this.logger.warn(`Failed to delete image: ${filePath} - ${error.message}`);
             }
-        });
+        }
     }
+
 }

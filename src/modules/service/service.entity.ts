@@ -14,7 +14,7 @@ export class ServiceEntity {
     @Column({ type: "varchar", name: "content", nullable: true })
     content: string;
 
-    @Column({ type: "varchar", name: "description", nullable: true })
+    @Column({ type: "varchar",length: 255, name: "description", nullable: true })
     description: string;
 
     @Column({ type: "varchar", name: "slug", nullable: true })
