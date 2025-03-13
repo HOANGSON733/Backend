@@ -47,8 +47,6 @@ export class ProductEntity {
     @Column({ type: "date", name: "expiry", nullable: true })
     expiry: string;
 
-    
-
     @Column({ type: "varchar", name: "slug", nullable: true })
     slug: string;
 

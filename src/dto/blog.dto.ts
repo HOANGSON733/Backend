@@ -2,15 +2,18 @@ import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateBlogDto {
     @IsNotEmpty()
-    @IsString()
-    content: string
-
-    @IsNotEmpty()
-    image: string
+    name: string
 
     @IsString()
     @IsNotEmpty()
     title: string
+
+    @IsNotEmpty()
+    image: string
+
+    @IsNotEmpty()
+    @IsString()
+    content: string
 
     @IsString()
     description: string
@@ -19,15 +22,18 @@ export class CreateBlogDto {
 }
 export class UpdateBlogDto {
     @IsNotEmpty()
-    @IsString()
-    content: string
-
-    @IsNotEmpty()
-    image: string
+    name: string
 
     @IsString()
     @IsNotEmpty()
     title: string
+
+    @IsNotEmpty()
+    image: string
+
+    @IsNotEmpty()
+    @IsString()
+    content: string
 
     @IsString()
     description: string

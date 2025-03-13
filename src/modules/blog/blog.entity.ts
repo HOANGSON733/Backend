@@ -5,16 +5,20 @@ export class BlogEntity {
     @PrimaryGeneratedColumn({ name: "id" })
     id: number
 
-    @Column({ type: "text", name: "content", nullable: true })
-    content: string
+    @Column({ type: "varchar", name: "name", nullable: true })
+    name: string
 
-    @Column({ type: "varchar", name: "image", nullable: true })
-    image: string
-    
     @Column({ type: "varchar", name: "title", nullable: true })
     title: string
 
-    @Column({ type: "varchar", name: "description", nullable: true })
+    @Column({ type: "varchar", name: "image", nullable: true })
+    image: string
+
+    @Column({ type: "text", name: "content", nullable: true })
+    content: string
+
+
+    @Column({ type: "text", name: "description", nullable: true })
     description: string
 
     @Column({ type: "varchar", name: "slug", nullable: true })

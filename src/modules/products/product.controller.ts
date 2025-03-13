@@ -1,22 +1,66 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
+import {
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Patch,
+  Param,
+  Body,
+  ParseIntPipe,
+  UseInterceptors,
+  UploadedFiles,
+  BadRequestException,
+  UploadedFile
+} from "@nestjs/common";
 import { ProductService } from "./product.service";
 import { CreateProductDto } from "src/dto/product.dto";
 import { ResponseData } from "src/global/globalClass";
 import { ProductEntity } from "./product.entity";
 import { HttpMessager, HttpStatus } from "src/global/globalEnum";
+import { AnyFilesInterceptor, FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
+import { diskStorage } from "multer";
+import { extname } from "path";
 
 @Controller("products")
 export class ProductController {
   constructor(private readonly productService: ProductService) { }
+
   @Post()
-  async createProduct(@Body() productDto: CreateProductDto): Promise<ResponseData<ProductEntity>> {
+  @UseInterceptors(AnyFilesInterceptor({
+    storage: diskStorage({
+      destination: "./uploads",
+      filename: (req, file, callback) => {
+        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+        const ext = extname(file.originalname);
+        callback(null, `${uniqueSuffix}${ext}`);
+      },
+    }),
+  }))
+  async createProduct(
+    @Body() productDto: CreateProductDto,
+    @UploadedFiles() files: Express.Multer.File[]
+  ): Promise<ResponseData<ProductEntity>> {
     try {
+      console.log("Files nhận được:", files);
+
+      // Lọc file theo fieldname
+      const imageFile = files.find(f => f.fieldname === "image");
+      const galleryFiles = files.filter(f => f.fieldname === "gallery");
+
+      if (imageFile) {
+        productDto.image = `http://localhost:5000/uploads/${imageFile.filename}`;
+      }
+      if (galleryFiles.length > 0) {
+        productDto.gallery = galleryFiles.map(f => `http://localhost:5000/uploads/${f.filename}`);
+      }
+
       const newItem = await this.productService.createProduct(productDto);
       return new ResponseData<ProductEntity>(newItem, HttpStatus.SUCCESS, HttpMessager.SUCCESS);
     } catch (error) {
       return new ResponseData<ProductEntity>(null, HttpStatus.ERROR, error.message || HttpMessager.ERROR);
     }
   }
+
 
 
   @Get()
@@ -29,18 +73,54 @@ export class ProductController {
     }
   }
 
-  @Get(':id')
-  async getProductDetail(@Param('id') id: number) {
-    return this.productService.getProductDetail(id);
+  @Get(":id")
+  async getProductDetail(@Param("id", ParseIntPipe) id: number): Promise<ResponseData<ProductEntity>> {
+    try {
+      const item = await this.productService.getProductById(id); // Sửa lỗi gọi dữ liệu từ DB
+      if (!item) throw new BadRequestException("Product not found");
+
+      return new ResponseData<ProductEntity>(item, HttpStatus.SUCCESS, HttpMessager.SUCCESS);
+    } catch (error) {
+      return new ResponseData<ProductEntity>(null, HttpStatus.ERROR, HttpMessager.ERROR);
+    }
   }
 
-  @Patch(':id')
-  async updateProduct(@Param('id') id: number, @Body() updateData: Partial<CreateProductDto>) {
-    return this.productService.updateProduct(id, updateData);
+  @Patch(":id")
+  @UseInterceptors(
+    FilesInterceptor("gallery", 5, {
+      storage: diskStorage({
+        destination: "./uploads",
+        filename: (req, file, callback) => {
+          const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+          const ext = extname(file.originalname);
+          callback(null, `${uniqueSuffix}${ext}`);
+        },
+      }),
+    })
+  )
+  async updateProduct(
+    @Param("id", ParseIntPipe) id: number,
+    @Body() updateData: Partial<CreateProductDto>,
+    @UploadedFiles() files?: Express.Multer.File[]
+  ): Promise<ResponseData<ProductEntity>> {
+    try {
+      if (files && files.length > 0) {
+        updateData.gallery = files.map(file => `http://localhost:5000/uploads/${file.filename}`);
+      }
+      const updatedProduct = await this.productService.updateProduct(id, updateData);
+      return new ResponseData<ProductEntity>(updatedProduct, HttpStatus.SUCCESS, HttpMessager.SUCCESS);
+    } catch (error) {
+      return new ResponseData<ProductEntity>(null, HttpStatus.ERROR, HttpMessager.ERROR);
+    }
   }
 
-  @Delete(':id')
-  async deleteProduct(@Param('id') id: number) {
-    return this.productService.deleteProduct(id);
+  @Delete(":id")
+  async deleteProduct(@Param("id", ParseIntPipe) id: number): Promise<ResponseData<null>> {
+    try {
+      await this.productService.deleteProduct(id);
+      return new ResponseData<null>(null, HttpStatus.SUCCESS, HttpMessager.SUCCESS);
+    } catch (error) {
+      return new ResponseData<null>(null, HttpStatus.ERROR, HttpMessager.ERROR);
+    }
   }
 }

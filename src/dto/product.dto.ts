@@ -23,7 +23,7 @@ export class CreateProductDto {
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
-  gallery?: string;
+  gallery?: string[];
 
   @IsNotEmpty()
   @IsString()
