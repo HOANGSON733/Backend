@@ -17,8 +17,8 @@ export class ProductEntity {
     @Column({ type: "varchar", name: "image", nullable: true })
     image: string;
 
-    @Column({ type: "text", name: "gallery", nullable: true })
-    gallery: string; // Lưu dưới dạng JSON string
+    @Column({ type: "simple-json", name: "gallery", nullable: true })
+    gallery: string[];
 
     @Column({ type: "varchar", name: "category", nullable: true })
     category: string;

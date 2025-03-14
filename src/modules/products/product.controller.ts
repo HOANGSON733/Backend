@@ -41,6 +41,7 @@ export class ProductController {
     @UploadedFiles() files: Express.Multer.File[]
   ): Promise<ResponseData<ProductEntity>> {
     try {
+      console.log("Received data1:", productDto);
       console.log("Files nhận được:", files);
 
       // Lọc file theo fieldname
