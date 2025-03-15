@@ -15,7 +15,7 @@ export class ProductEntity {
     originalPrice: number;
 
     @Column({ type: "varchar", name: "image", nullable: true })
-    image: string;
+    image: string | null;
 
     @Column({ type: "simple-json", name: "gallery", nullable: true })
     gallery: string[];
@@ -23,7 +23,7 @@ export class ProductEntity {
     @Column({ type: "varchar", name: "category", nullable: true })
     category: string;
 
-    @Column({ type: "varchar", name: "description", nullable: true })
+    @Column({ type: "longtext", name: "description", nullable: true })
     description: string;
 
     @Column({ type: "text", name: "features", nullable: true })
