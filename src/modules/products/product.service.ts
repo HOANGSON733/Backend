@@ -17,7 +17,7 @@ export class ProductService {
     const newProduct = this.productRepository.create({
       ...productDto,
       gallery: productDto.gallery || [], // Đảm bảo gallery là mảng
-      features: productDto.features ? JSON.stringify(productDto.features) : "{}", // Chuyển thành JSON
+      features: productDto.features ? JSON.stringify(productDto.features) : "", // Chuyển thành JSON
     });
     return this.productRepository.save(newProduct);
   }
