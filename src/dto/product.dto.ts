@@ -62,4 +62,8 @@ export class CreateProductDto {
   @IsNotEmpty()
   @IsString()
   expiry: string;
+
+  @IsNotEmpty()
+  @IsString()
+  usage: string;
 }
