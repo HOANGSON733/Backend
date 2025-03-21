@@ -26,8 +26,8 @@ export class ProductEntity {
     @Column({ type: "longtext", name: "description", nullable: true })
     description: string;
 
-    @Column({ type: "simple-json", name: "features", nullable: true })
-    features: string; // Lưu dưới dạng JSON string
+    @Column({ type: "text", name: "features", nullable: true })
+    features: string; 
 
     @Column({ type: "varchar", name: "weight", nullable: true })
     weight: string;

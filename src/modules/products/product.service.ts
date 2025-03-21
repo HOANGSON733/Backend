@@ -16,8 +16,7 @@ export class ProductService {
   async createProduct(productDto: CreateProductDto): Promise<ProductEntity> {
     const newProduct = this.productRepository.create({
       ...productDto,
-      gallery: productDto.gallery || [], // Đảm bảo gallery là mảng
-      features: productDto.features ? JSON.stringify(productDto.features) : "", // Chuyển thành JSON
+      gallery: productDto.gallery || []// Đảm bảo gallery là mảng
     });
     return this.productRepository.save(newProduct);
   }
@@ -37,9 +36,6 @@ export class ProductService {
 
     if (updateData.gallery) {
       product.gallery = updateData.gallery;
-    }
-    if (updateData.features) {
-      product.features = JSON.stringify(updateData.features);
     }
 
     Object.assign(product, updateData);

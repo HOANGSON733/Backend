@@ -18,8 +18,8 @@ import { GalleryModule } from './modules/gallery/gallery.module';
     entities: [
         __dirname + '/**/*.entity{.ts,.js}',
     ],
-    synchronize: false,
-    dropSchema: false,
+    synchronize: true,
+    dropSchema: true,
   })],
   controllers: [AppController],
   providers: [AppService],

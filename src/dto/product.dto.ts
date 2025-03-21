@@ -22,7 +22,8 @@ export class CreateProductDto {
 
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  // @IsString({ each: true })
+  @Type(() => String) // ✅ Fix lỗi `@IsString({ each: true })`
   gallery?: string[];
 
   @IsNotEmpty()
@@ -34,9 +35,8 @@ export class CreateProductDto {
   description?: string;
 
   @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  features?: string;
+  @IsString()
+  features: string;
 
   // 🛠️ Thêm validation cho các thuộc tính specifications
   @IsNotEmpty()
@@ -61,6 +61,7 @@ export class CreateProductDto {
 
   @IsNotEmpty()
   @IsString()
+  @Type(() => Date) // ✅ Fix lỗi `expiry` sang `Date`
   expiry: string;
 
   @IsNotEmpty()
