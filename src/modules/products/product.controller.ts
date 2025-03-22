@@ -87,30 +87,48 @@ export class ProductController {
   }
 
   @Patch(":id")
-  @UseInterceptors(
-    FilesInterceptor("gallery", 5, {
-      storage: diskStorage({
-        destination: "./uploads",
-        filename: (req, file, callback) => {
-          const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-          const ext = extname(file.originalname);
-          callback(null, `${uniqueSuffix}${ext}`);
-        },
-      }),
-    })
-  )
+  @UseInterceptors(AnyFilesInterceptor({
+    storage: diskStorage({
+      destination: "./uploads",
+      filename: (req, file, callback) => {
+        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+        const ext = extname(file.originalname);
+        callback(null, `${uniqueSuffix}${ext}`);
+      },
+    }),
+  }))
   async updateProduct(
     @Param("id", ParseIntPipe) id: number,
     @Body() updateData: Partial<CreateProductDto>,
     @UploadedFiles() files?: Express.Multer.File[]
   ): Promise<ResponseData<ProductEntity>> {
     try {
-      if (files && files.length > 0) {
-        updateData.gallery = files.map(file => `http://localhost:5000/uploads/${file.filename}`);
+      console.log("Received update request for product ID:", id, "with data:", updateData);
+      const product = await this.productService.getProductById(id);
+      if (!product) {
+        console.error("Product not found with ID:", id);
+        return new ResponseData<ProductEntity>(null, HttpStatus.ERROR, "Product not found");
       }
+
+      console.log("Existing product data:", product);
+      
+      const imageFile = files?.find(f => f.fieldname === "image");
+      const galleryFiles = files?.filter(f => f.fieldname === "gallery");
+
+      updateData.image = imageFile
+        ? `http://localhost:5000/uploads/${imageFile.filename}`
+        : product.image ?? undefined;
+
+      updateData.gallery = galleryFiles && galleryFiles.length > 0
+        ? galleryFiles.map(f => `http://localhost:5000/uploads/${f.filename}`)
+        : product.gallery ?? [];
+
+      console.log("Updated product data:", updateData);
       const updatedProduct = await this.productService.updateProduct(id, updateData);
+      console.log("Product updated successfully", updatedProduct);
       return new ResponseData<ProductEntity>(updatedProduct, HttpStatus.SUCCESS, HttpMessager.SUCCESS);
     } catch (error) {
+      console.error("Error updating product", error);
       return new ResponseData<ProductEntity>(null, HttpStatus.ERROR, HttpMessager.ERROR);
     }
   }
