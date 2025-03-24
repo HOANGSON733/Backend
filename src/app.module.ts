@@ -19,7 +19,7 @@ import { GalleryModule } from './modules/gallery/gallery.module';
         __dirname + '/**/*.entity{.ts,.js}',
     ],
     synchronize: true,
-    // dropSchema: true,
+    dropSchema: true,
   })],
   controllers: [AppController],
   providers: [AppService],
