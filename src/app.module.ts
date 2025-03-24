@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProductModule } from './modules/products/product.module';
-import { TypeOrmModule } from "@nestjs/typeorm";
 import { blogModule } from './modules/blog/blog.module';
 import { serviceModule } from './modules/service/service.module';
 import { GalleryModule } from './modules/gallery/gallery.module';
@@ -10,21 +11,21 @@ import { BannerModule } from './modules/banner/banner.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(), // Load biến môi trường từ Render
     GalleryModule,
     serviceModule,
     ProductModule,
     blogModule,
     BannerModule,
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: process.env.DATABASE_HOST || 'localhost',
-      port: parseInt(process.env.DATABASE_PORT || '3306', 10),
-      username: process.env.DATABASE_USER || 'root',
-      password: process.env.DATABASE_PASSWORD || 'root',
-      database: process.env.DATABASE_NAME || 'test',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,
-      dropSchema: false, // Tắt để tránh mất dữ liệu
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        type: 'mysql',
+        url: configService.get<string>('DATABASE_URL'), // Lấy DATABASE_URL từ môi trường
+        autoLoadEntities: true,
+        synchronize: true,
+      }),
+      inject: [ConfigService],
     }),
   ],
   controllers: [AppController],
