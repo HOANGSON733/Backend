@@ -6,7 +6,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { blogModule } from './modules/blog/blog.module';
 import { serviceModule } from './modules/service/service.module';
 import { GalleryModule } from './modules/gallery/gallery.module';
-import { Banner } from './modules/banner/banner.entity';
+import { BannerModule } from './modules/banner/banner.module';
 
 @Module({
   imports: [
@@ -14,7 +14,7 @@ import { Banner } from './modules/banner/banner.entity';
     serviceModule,
     ProductModule,
     blogModule,
-    Banner,
+    BannerModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DATABASE_HOST || 'localhost',

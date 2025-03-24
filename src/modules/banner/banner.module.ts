@@ -9,5 +9,8 @@ import { Banner } from "./banner.entity";
   imports: [TypeOrmModule.forFeature([Banner])],
   controllers: [BannerController],
   providers: [BannerService],
+  exports: [TypeOrmModule], // Xuất để sử dụng trong AppModule
 })
 export class BannerModule {}
+export { Banner };
+
