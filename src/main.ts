@@ -3,8 +3,10 @@ import { AppModule } from './app.module';
 import * as express from 'express';
 import { json, urlencoded } from 'express';
 import { mkdirSync, existsSync } from "fs";
+import { config } from 'dotenv';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  config();
 
   app.enableCors();
   app.use(urlencoded({ extended: true }));
