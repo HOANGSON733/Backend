@@ -9,24 +9,21 @@ import { GalleryModule } from './modules/gallery/gallery.module';
 import { BannerModule } from './modules/banner/banner.module';
 
 @Module({
-  imports: [
-    GalleryModule,
-    serviceModule,
-    ProductModule,
-    blogModule,
-    BannerModule,
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: process.env.DATABASE_HOST,
-      port: Number(process.env.DATABASE_PORT) || 3306,
-      username: process.env.DATABASE_USERNAME,
-      password: process.env.DATABASE_PASSWORD,
-      database: process.env.DATABASE_NAME,
-      autoLoadEntities: true,
-      synchronize: true,
-    }),
-  ],
+  imports: [GalleryModule, serviceModule, ProductModule, blogModule,BannerModule, TypeOrmModule.forRoot({
+    type: 'mysql',
+    host: 'localhost',
+    port: 3306,
+    username: 'root',
+    password: 'root',
+    database: 'test',
+    entities: [
+      __dirname + '/**/*.entity{.ts,.js}',
+    ],
+    synchronize: false,
+    // dropSchema: true,
+  })],
   controllers: [AppController],
   providers: [AppService],
+
 })
-export class AppModule {}
+export class AppModule { }
