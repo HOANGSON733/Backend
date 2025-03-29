@@ -19,7 +19,7 @@ export class CreateGalleryDto {
     content: string;
 
     @IsString()
-    @IsNotEmpty()
+    // @IsNotEmpty()
     category: string;
 }
 
