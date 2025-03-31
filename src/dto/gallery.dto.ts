@@ -21,6 +21,11 @@ export class CreateGalleryDto {
     @IsString()
     // @IsNotEmpty()
     category: string;
+
+    
+    @IsString()
+    category1: string;
+
 }
 
 export class UpdateGalleryDto {

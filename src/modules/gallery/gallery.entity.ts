@@ -20,6 +20,9 @@ export class GalleryEntity {
     @Column({ type: "varchar", name: "category", nullable: true })
     category: string;
 
+    @Column({ type: "varchar", name: "category1", nullable: true })
+    category1: string;
+
     @Column({ type: "varchar", name: "slug", nullable: true })
     slug: string;
 
